@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ironeaglex</groupId>
+	<artifactId>sbs1-kafka-connector</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>sbs1-kafka-connector</name>
+	<description>Kafka Connector for SBS-1 (BaseStation)</description>
+
+	<parent>
+		<groupId>io.confluent</groupId>
+		<artifactId>common</artifactId>
+		<version>5.5.1</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<properties>
+		<java.version>1.8</java.version>
+	</properties>
+
+	<repositories>
+		<repository>
+			<id>confluent</id>
+			<url>http://packages.confluent.io/maven/</url>
+		</repository>
+	</repositories>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>connect-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+							<addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+						</manifest>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<inherited>true</inherited>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptors>
+						<descriptor>src/main/assembly/package.xml</descriptor>
+					</descriptors>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+				<!-- <executions>
+					<execution>
+						<id>check-style</id>
+						<goals>
+							<goal>check</goal>
+						</goals>
+						<phase>validate</phase>
+					</execution>
+				</executions> -->
+			</plugin>
+		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
+	</build>
+</project>
