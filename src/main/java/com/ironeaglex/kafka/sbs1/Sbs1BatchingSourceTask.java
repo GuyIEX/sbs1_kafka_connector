@@ -26,7 +26,6 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -56,30 +55,6 @@ public class Sbs1BatchingSourceTask extends SourceTask {
 	private Socket source;
 
 	private int batchSize = Sbs1SourceConnector.DEFAULT_TASK_BATCH_SIZE;
-
-	private static final String SBS1_MSG_JSON_TEMPLATE =
-		"{\"messageType\":\"%1$s\"," +
-		"\"transmissionType\":\"%2$s\"," +
-		"\"sessionId\":\"%3$s\"," +
-		"\"aircraftId\":\"%4$s\"," +
-		"\"hexIdent\":\"%5$s\"," +
-		"\"flightId\":\"%6$s\"," +
-		"\"generatedDate\":\"%7$s\"," +
-		"\"generatedTime\":\"%8$s\"," +
-		"\"loggedDate\":\"%9$s\"," +
-		"\"loggedTime\":\"%10$s\"," +
-		"\"callsign\":\"%11$s\"," +
-		"\"altitude\":\"%12$s\"," +
-		"\"groundSpeed\":\"%13$s\"," +
-		"\"track\":\"%14$s\"," +
-		"\"latitude\":\"%15$s\"," +
-		"\"longitude\":\"%16$s\"," +
-		"\"verticalRate\":\"%17$s\"," +
-		"\"squawk\":\"%18$s\"," +
-		"\"alert\":\"%19$s\"," +
-		"\"emergency\":\"%20$s\"," +
-		"\"spi\":\"%21$s\"," +
-		"\"isOnGround\":\"%22$s\"}";
 
 	@Override
 	public String version() {
@@ -156,23 +131,18 @@ public class Sbs1BatchingSourceTask extends SourceTask {
 							}
 
 							// Convert line to JSON
+							String payload = Sbs1Json.sbs1ToJson(line);
+
 							// Get rid of any CRLF characters on the end of the string
 							line = line.trim();
 
-							// Ensure there are 22 fields for the template
-							Object[] parts = new Object[22];
-							Arrays.fill(parts, "");
-							Object[] temp = line.split(",");
-							System.arraycopy(temp, 0, parts, 0, temp.length);
-
-							// Build the payload from the template
-							line = String.format(SBS1_MSG_JSON_TEMPLATE, parts);
+							Object[] parts = line.split(",");
 
 							// Build a key of the message type, transmission type and hex identifier
 							String key = parts[0]+"-"+parts[1]+"-"+parts[4];
 
 							records.add(new SourceRecord(offsetKey(logConnectionName()), offsetValue(System.currentTimeMillis()),
-									topic, null, KEY_SCHEMA, key, VALUE_SCHEMA, line, System.currentTimeMillis()));
+									topic, null, KEY_SCHEMA, key, VALUE_SCHEMA, payload, System.currentTimeMillis()));
 
 							if (records.size() >= batchSize) {
 								return records;

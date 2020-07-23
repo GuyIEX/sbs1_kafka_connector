@@ -9,32 +9,27 @@ This repository contains a Kafka Source Connector for SBS-1 (ADS-B) messages. Th
 | ``MSG,3,333,272,AD2328,372,2020/07/21,18:05:22.417,2020/07/21,18:05:...`` | ``MSG-3-AD2328`` |
 | ``MSG,4,333,272,AD2328,372,2020/07/21,18:05:22.417,2020/07/21,18:05:...`` | ``MSG-4-AD2328`` |
 
-No processing of the data fields is performed in this connector, so all values are represented as strings. The following is an example JSON message published to Kafka.
+Only the fields associated with each specific message type are included in the generated JSON. The following is an example JSON message published to Kafka.
 
 ```json
 {
-    "messageType": "MSG",
-    "transmissionType": "3",
-    "sessionId": "333",
-    "aircraftId": "464",
-    "hexIdent": "A7C8EC",
-    "flightId": "564",
-    "generatedDate": "2020/07/22",
-    "generatedTime": "19:53:12.537",
-    "loggedDate": "2020/07/22",
-    "loggedTime": "19:53:12.537",
-    "callsign": "",
-    "altitude": "4925",
-    "groundSpeed": "",
-    "track": "",
-    "latitude": "40.59846",
-    "longitude": "-75.34039",
-    "verticalRate": "",
-    "squawk": "",
-    "alert": "0",
-    "emergency": "0",
-    "spi": "0",
-    "isOnGround": "0"
+    "MT": "MSG",
+    "TT": "3",
+    "SID": "333",
+    "AID": "485",
+    "HEX": "A2B081",
+    "FID": "585",
+    "DMG": "2020/07/23",
+    "TMG": "15:46:49.878",
+    "DML": "2020/07/23",
+    "TML": "15:46:49.878",
+    "ALT": "23325",
+    "LAT": "40.65258",
+    "LNG": "-75.60273",
+    "ALRT": "0",
+    "EMER": "0",
+    "SPI": "0",
+    "GND": "0"
 }
 ```
 
